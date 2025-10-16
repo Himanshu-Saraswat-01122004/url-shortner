@@ -4,6 +4,7 @@ import toast from 'react-hot-toast';
 import { urlService, analyticsService, utils } from '../services/api';
 import UrlShortener from '../components/UrlShortener';
 import UrlCard from '../components/UrlCard';
+import QrCodeGenerator from '../components/QrCodeGenerator';
 
 const Dashboard = () => {
   const [urls, setUrls] = useState([]);
@@ -11,6 +12,8 @@ const Dashboard = () => {
   const [loading, setLoading] = useState(false);
   const [analyticsLoading, setAnalyticsLoading] = useState(false);
   const [showShortener, setShowShortener] = useState(false);
+  const [showQrGenerator, setShowQrGenerator] = useState(false);
+  const [selectedShortCode, setSelectedShortCode] = useState(null);
 
   // Load recent URLs from localStorage
   useEffect(() => {
@@ -117,6 +120,16 @@ const Dashboard = () => {
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleQrCode = (shortCode) => {
+    setSelectedShortCode(shortCode);
+    setShowQrGenerator(true);
+  };
+
+  const handleCloseQrGenerator = () => {
+    setShowQrGenerator(false);
+    setSelectedShortCode(null);
   };
 
   return (
@@ -256,6 +269,7 @@ const Dashboard = () => {
                   url={url}
                   onCopy={handleCopyUrl}
                   onDelete={handleDeleteUrl}
+                  onQrCode={handleQrCode}
                   loading={loading}
                   showAnalytics={true}
                 />
@@ -287,6 +301,14 @@ const Dashboard = () => {
           </div>
         </div>
       </div>
+
+      {/* QR Code Generator Modal */}
+      {showQrGenerator && selectedShortCode && (
+        <QrCodeGenerator
+          shortCode={selectedShortCode}
+          onClose={handleCloseQrGenerator}
+        />
+      )}
     </div>
   );
 };

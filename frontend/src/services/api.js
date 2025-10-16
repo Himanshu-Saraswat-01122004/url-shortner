@@ -79,6 +79,35 @@ export const urlService = {
     const response = await urlHealthApi.get('/health');
     return response.data;
   },
+
+  // QR Code APIs
+  getQrCodeData: async (shortCode, options = {}) => {
+    const params = new URLSearchParams();
+    if (options.size) params.append('size', options.size);
+    if (options.errorCorrectionLevel) params.append('errorCorrectionLevel', options.errorCorrectionLevel);
+    if (options.color) {
+      if (options.color.dark) params.append('color[dark]', options.color.dark);
+      if (options.color.light) params.append('color[light]', options.color.light);
+    }
+    if (options.margin) params.append('margin', options.margin);
+    
+    const response = await urlApi.get(`/qr-data/${shortCode}?${params.toString()}`);
+    return response.data;
+  },
+
+  getQrCodeUrl: (shortCode, options = {}) => {
+    const params = new URLSearchParams();
+    if (options.size) params.append('size', options.size);
+    if (options.format) params.append('format', options.format);
+    if (options.errorCorrectionLevel) params.append('errorCorrectionLevel', options.errorCorrectionLevel);
+    if (options.color) {
+      if (options.color.dark) params.append('color[dark]', options.color.dark);
+      if (options.color.light) params.append('color[light]', options.color.light);
+    }
+    if (options.margin) params.append('margin', options.margin);
+    
+    return `${URL_SERVICE_BASE}/qr/${shortCode}?${params.toString()}`;
+  },
 };
 
 // Analytics Service APIs

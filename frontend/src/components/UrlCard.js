@@ -1,9 +1,9 @@
 import React from 'react';
 import { Link as RouterLink } from 'react-router-dom';
-import { ExternalLink, Copy, Trash2, BarChart3, Calendar, MousePointer } from 'lucide-react';
+import { ExternalLink, Copy, Trash2, BarChart3, Calendar, MousePointer, QrCode } from 'lucide-react';
 import { utils } from '../services/api';
 
-const UrlCard = ({ url, onCopy, onDelete, loading, showAnalytics = false }) => {
+const UrlCard = ({ url, onCopy, onDelete, loading, showAnalytics = false, onQrCode }) => {
   const shortCode = url.shortCode || url.shortUrl?.split('/').pop();
   const domain = utils.getDomain(url.longUrl);
   const createdDate = url.createdAt ? utils.formatDate(url.createdAt) : 'Recently';
@@ -77,6 +77,16 @@ const UrlCard = ({ url, onCopy, onDelete, loading, showAnalytics = false }) => {
             >
               <BarChart3 className="h-4 w-4" />
             </RouterLink>
+          )}
+          
+          {shortCode && onQrCode && (
+            <button
+              onClick={() => onQrCode(shortCode)}
+              className="p-2 text-gray-400 hover:text-purple-600 hover:bg-purple-50 rounded-md transition-colors"
+              title="Generate QR Code"
+            >
+              <QrCode className="h-4 w-4" />
+            </button>
           )}
           
           <button
